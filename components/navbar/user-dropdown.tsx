@@ -1,4 +1,4 @@
-import { Avatar, Dropdown, Navbar, Text } from "@nextui-org/react";
+import { Avatar, Dropdown, Link, Navbar, Text } from "@nextui-org/react";
 import { DarkModeSwitch } from "./darkmodeswitch";
 
 export const UserDropdown = () => {
@@ -15,6 +15,7 @@ export const UserDropdown = () => {
           />
         </Dropdown.Trigger>
       </Navbar.Item>
+
       <Dropdown.Menu
         aria-label="User menu actions"
         onAction={(actionKey) => console.log({ actionKey })}
@@ -28,7 +29,7 @@ export const UserDropdown = () => {
           </Text>
         </Dropdown.Item>
         <Dropdown.Item key="settings" withDivider>
-          My Settings
+          <Link href="/Profile">my Porfile</Link>
         </Dropdown.Item>
         <Dropdown.Item key="team_settings">Team Settings</Dropdown.Item>
         <Dropdown.Item key="analytics" withDivider>
