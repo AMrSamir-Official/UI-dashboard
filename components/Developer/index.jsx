@@ -73,7 +73,6 @@ const CrumbLink = ({ href, children }) => {
   );
 };
 
-// Define the Developer Dashboard
 export const Developer = () => {
   const [selectedLog, setSelectedLog] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);

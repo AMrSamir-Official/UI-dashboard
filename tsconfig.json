@@ -15,6 +15,16 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "components/Settings/index.jsx",
+    "components/Reports/index.jsx",
+    "components/Products/index.jsx",
+    "components/Payments/index.jsx",
+    "components/Developer/index.jsx",
+    "components/Customers/index.jsx"
+  ],
   "exclude": ["node_modules"]
 }

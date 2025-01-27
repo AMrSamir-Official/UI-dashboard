@@ -245,7 +245,6 @@ export const ViewTestData = () => {
         />
       </Flex>
 
-      {/* Test Summary Cards */}
       <Grid.Container gap={2} css={{ mt: "20px" }}>
         <Grid xs={12} sm={4}>
           <Card css={{ backgroundColor: isDarkMode ? "#f0f4ff" : "#333333" }}>

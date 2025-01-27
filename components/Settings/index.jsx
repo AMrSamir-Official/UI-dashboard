@@ -73,7 +73,7 @@ export const Settings = () => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true); // Ensure this runs only on the client
+    setIsClient(true);
   }, []);
 
   const handleSaveProfile = () => {

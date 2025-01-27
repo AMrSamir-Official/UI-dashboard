@@ -2,10 +2,8 @@ import {
   Badge,
   Button,
   Card,
-  Checkbox,
   Dropdown,
   Input,
-  Modal,
   Pagination,
   Spacer,
   Text,
@@ -23,7 +21,6 @@ import {
   YAxis,
 } from "recharts";
 
-// Define the Flex component for layout
 const Flex = ({ children, css, justify, direction, align, wrap }) => {
   return (
     <div
@@ -71,40 +68,9 @@ const CrumbLink = ({ href, children }) => {
 };
 
 // Define the TableWrapper component
-const TableWrapper = ({ data, onPageChange, onSelectProduct }) => {
-  const [selectedProducts, setSelectedProducts] = useState([]);
-
-  const handleSelectAll = (e) => {
-    if (e.target.checked) {
-      setSelectedProducts(data.map((product) => product.id));
-    } else {
-      setSelectedProducts([]);
-    }
-  };
-
-  const handleSelectProduct = (id) => {
-    if (selectedProducts.includes(id)) {
-      setSelectedProducts(
-        selectedProducts.filter((productId) => productId !== id)
-      );
-    } else {
-      setSelectedProducts([...selectedProducts, id]);
-    }
-  };
-
+const TableWrapper = ({ data, onPageChange }) => {
   return (
     <div style={{ marginTop: "20px" }}>
-      <Flex css={{ gap: "8px", mb: "10px" }}>
-        <Checkbox onChange={handleSelectAll} />
-        <Button
-          auto
-          size="sm"
-          color="error"
-          disabled={selectedProducts.length === 0}
-        >
-          Delete Selected
-        </Button>
-      </Flex>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr>
@@ -114,15 +80,8 @@ const TableWrapper = ({ data, onPageChange, onSelectProduct }) => {
                 borderBottom: "1px solid #ddd",
                 textAlign: "left",
               }}
-            ></th>
-            <th
-              style={{
-                padding: "10px",
-                borderBottom: "1px solid #ddd",
-                textAlign: "left",
-              }}
             >
-              Product ID
+              Customer ID
             </th>
             <th
               style={{
@@ -140,7 +99,7 @@ const TableWrapper = ({ data, onPageChange, onSelectProduct }) => {
                 textAlign: "left",
               }}
             >
-              Category
+              Email
             </th>
             <th
               style={{
@@ -149,16 +108,7 @@ const TableWrapper = ({ data, onPageChange, onSelectProduct }) => {
                 textAlign: "left",
               }}
             >
-              Price
-            </th>
-            <th
-              style={{
-                padding: "10px",
-                borderBottom: "1px solid #ddd",
-                textAlign: "left",
-              }}
-            >
-              Stock
+              Phone
             </th>
             <th
               style={{
@@ -181,43 +131,29 @@ const TableWrapper = ({ data, onPageChange, onSelectProduct }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((product) => (
-            <tr key={product.id}>
+          {data.map((customer) => (
+            <tr key={customer.id}>
               <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                <Checkbox
-                  isSelected={selectedProducts.includes(product.id)}
-                  onChange={() => handleSelectProduct(product.id)}
-                />
+                {customer.id}
               </td>
               <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                {product.id}
+                {customer.name}
               </td>
               <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                {product.name}
+                {customer.email}
               </td>
               <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                {product.category}
-              </td>
-              <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                {product.price}
-              </td>
-              <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                {product.stock}
+                {customer.phone}
               </td>
               <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
                 <Badge
-                  color={product.status === "In Stock" ? "success" : "error"}
+                  color={customer.status === "Active" ? "success" : "error"}
                 >
-                  {product.status}
+                  {customer.status}
                 </Badge>
               </td>
               <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                <Button
-                  auto
-                  size="sm"
-                  color="primary"
-                  onClick={() => onSelectProduct(product)}
-                >
+                <Button auto size="sm" color="primary">
                   View
                 </Button>
                 <Spacer x={0.5} />
@@ -235,98 +171,64 @@ const TableWrapper = ({ data, onPageChange, onSelectProduct }) => {
   );
 };
 
-// Define the AddProduct component
-const AddProduct = () => {
+// Define the AddCustomer component
+const AddCustomer = () => {
   return (
     <Dropdown>
       <Dropdown.Button flat color="primary" auto>
-        Add Product
+        Add Customer
       </Dropdown.Button>
-      <Dropdown.Menu aria-label="Add Product Actions">
-        <Dropdown.Item key="new">New Product</Dropdown.Item>
+      <Dropdown.Menu aria-label="Add Customer Actions">
+        <Dropdown.Item key="new">New Customer</Dropdown.Item>
         <Dropdown.Item key="bulk">Bulk Upload</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );
 };
 
-// Define the Products page
-export const Products = () => {
+// Define the Customers page
+export const Customers = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Mock data for the table
   const tableData = [
     {
       id: "1",
-      name: "Product A",
-      category: "Electronics",
-      price: "$100",
-      stock: 50,
-      status: "In Stock",
+      name: "John Doe",
+      email: "john@example.com",
+      phone: "+123456789",
+      status: "Active",
     },
     {
       id: "2",
-      name: "Product B",
-      category: "Clothing",
-      price: "$50",
-      stock: 0,
-      status: "Out of Stock",
+      name: "Jane Smith",
+      email: "jane@example.com",
+      phone: "+987654321",
+      status: "Inactive",
     },
     {
       id: "3",
-      name: "Product C",
-      category: "Home & Kitchen",
-      price: "$200",
-      stock: 20,
-      status: "In Stock",
-    },
-    {
-      id: "4",
-      name: "Product D",
-      category: "Electronics",
-      price: "$150",
-      stock: 10,
-      status: "In Stock",
-    },
-    {
-      id: "5",
-      name: "Product E",
-      category: "Clothing",
-      price: "$75",
-      stock: 0,
-      status: "Out of Stock",
-    },
-    {
-      id: "6",
-      name: "Product F",
-      category: "Home & Kitchen",
-      price: "$300",
-      stock: 5,
-      status: "In Stock",
+      name: "Alice Johnson",
+      email: "alice@example.com",
+      phone: "+1122334455",
+      status: "Active",
     },
     // Add more rows as needed
   ];
 
-  // Mock data for the product sales chart
-  const productSalesData = [
-    { month: "Jan", sales: 100 },
-    { month: "Feb", sales: 150 },
-    { month: "Mar", sales: 200 },
-    { month: "Apr", sales: 250 },
-    { month: "May", sales: 300 },
-    { month: "Jun", sales: 400 },
+  // Mock data for the customer growth chart
+  const customerGrowthData = [
+    { month: "Jan", customers: 100 },
+    { month: "Feb", customers: 150 },
+    { month: "Mar", customers: 200 },
+    { month: "Apr", customers: 250 },
+    { month: "May", customers: 300 },
+    { month: "Jun", customers: 400 },
   ];
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
     // Fetch data for the new page (you can implement this)
-  };
-
-  const handleSelectProduct = (product) => {
-    setSelectedProduct(product);
-    setIsModalOpen(true);
   };
 
   return (
@@ -352,8 +254,8 @@ export const Products = () => {
         </Crumb>
 
         <Crumb>
-          <span>📦</span> {/* Replace with your ProductsIcon */}
-          <CrumbLink href="#">Products</CrumbLink>
+          <span>👥</span> {/* Replace with your CustomersIcon */}
+          <CrumbLink href="#">Customers</CrumbLink>
           <Text>/</Text>
         </Crumb>
         <Crumb>
@@ -361,51 +263,51 @@ export const Products = () => {
         </Crumb>
       </Breadcrumbs>
 
-      <Text h3>All Products</Text>
+      <Text h3>All Customers</Text>
 
-      {/* Product Statistics Cards */}
+      {/* Customer Statistics Cards */}
       <Flex css={{ gap: "16px", mt: "20px" }} wrap={"wrap"}>
         <Card css={{ flex: 1, minWidth: "200px" }}>
           <Card.Body>
-            <Text h4>Total Products</Text>
-            <Text h2>500</Text>
+            <Text h4>Total Customers</Text>
+            <Text h2>1,000</Text>
             <Text small color="success">
-              +15% this month
+              +10% this month
             </Text>
           </Card.Body>
         </Card>
         <Card css={{ flex: 1, minWidth: "200px" }}>
           <Card.Body>
-            <Text h4>In Stock</Text>
-            <Text h2>400</Text>
+            <Text h4>Active Customers</Text>
+            <Text h2>800</Text>
             <Text small color="success">
-              80% in stock
+              80% active
             </Text>
           </Card.Body>
         </Card>
         <Card css={{ flex: 1, minWidth: "200px" }}>
           <Card.Body>
-            <Text h4>Out of Stock</Text>
-            <Text h2>100</Text>
+            <Text h4>Inactive Customers</Text>
+            <Text h2>200</Text>
             <Text small color="error">
-              20% out of stock
+              20% inactive
             </Text>
           </Card.Body>
         </Card>
       </Flex>
 
-      {/* Product Sales Chart */}
+      {/* Customer Growth Chart */}
       <Card css={{ mt: "20px" }}>
         <Card.Body>
-          <Text h4>Product Sales</Text>
+          <Text h4>Customer Growth</Text>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={productSalesData}>
+            <BarChart data={customerGrowthData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="sales" fill="#8884d8" />
+              <Bar dataKey="customers" fill="#8884d8" />
             </BarChart>
           </ResponsiveContainer>
         </Card.Body>
@@ -428,59 +330,24 @@ export const Products = () => {
         >
           <Input
             css={{ width: "100%", maxWidth: "410px" }}
-            placeholder="Search products"
+            placeholder="Search customers"
           />
           <Dropdown>
             <Dropdown.Button flat>Filter</Dropdown.Button>
             <Dropdown.Menu aria-label="Filter Actions">
-              <Dropdown.Item key="in-stock">In Stock</Dropdown.Item>
-              <Dropdown.Item key="out-of-stock">Out of Stock</Dropdown.Item>
+              <Dropdown.Item key="active">Active</Dropdown.Item>
+              <Dropdown.Item key="inactive">Inactive</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </Flex>
         <Flex direction={"row"} css={{ gap: "12px" }} wrap={"wrap"}>
-          <AddProduct />
-          <Dropdown>
-            <Dropdown.Button flat>Export</Dropdown.Button>
-            <Dropdown.Menu aria-label="Export Actions">
-              <Dropdown.Item key="csv">Export to CSV</Dropdown.Item>
-              <Dropdown.Item key="excel">Export to Excel</Dropdown.Item>
-              <Dropdown.Item key="pdf">Export to PDF</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          <AddCustomer />
+          <Button auto>Export to CSV</Button>
         </Flex>
       </Flex>
 
-      {/* Product Table */}
-      <TableWrapper
-        data={tableData}
-        onPageChange={handlePageChange}
-        onSelectProduct={handleSelectProduct}
-      />
-
-      {/* Product Details Modal */}
-      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <Modal.Header>
-          <Text h4>Product Details</Text>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedProduct && (
-            <div>
-              <Text>ID: {selectedProduct.id}</Text>
-              <Text>Name: {selectedProduct.name}</Text>
-              <Text>Category: {selectedProduct.category}</Text>
-              <Text>Price: {selectedProduct.price}</Text>
-              <Text>Stock: {selectedProduct.stock}</Text>
-              <Text>Status: {selectedProduct.status}</Text>
-            </div>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button auto onClick={() => setIsModalOpen(false)}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {/* Customer Table */}
+      <TableWrapper data={tableData} onPageChange={handlePageChange} />
     </Flex>
   );
 };

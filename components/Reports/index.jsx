@@ -197,7 +197,6 @@ export const Reports = () => {
         </Card.Body>
       </Card>
 
-      {/* Product Performance and Customer Satisfaction */}
       <Grid.Container gap={2} css={{ mt: "20px" }}>
         <Grid xs={12} sm={6}>
           <Card>
